@@ -21,5 +21,17 @@ describe('/', () => {
           expect(body.ok).to.equal(true);
         });
     });
+    describe('/topics', () => {
+      it('GET status:200 and returns a nested array within an object of topics', () => {
+        return request
+          .get('/api/topics')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.topics[0].description).to.equal(
+              'The man, the Mitch, the legend'
+            );
+          });
+      });
+    });
   });
 });
