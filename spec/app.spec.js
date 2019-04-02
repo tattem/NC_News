@@ -35,16 +35,34 @@ describe('/', () => {
       });
     });
     describe('/articles', () => {
-      it('GET status:200 and returns a nested array within an object of articles',() => {
+      it('GET status:200 and returns a nested array within an object of articles', () => {
+        return request
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0]).to.contain.keys(
+              'author',
+              'title',
+              'article_id',
+              'topic',
+              'created_at',
+              'votes',
+              'comment_count'
+            );
+          });
+      });
+      describe('DEFAULT BEHAVIORS', () => {
+        it('GET status:200 and returns the date in desc order', () => {
           return request
             .get('/api/articles')
             .expect(200)
             .then(({ body }) => {
-              expect(body.articles[0]).to.contain.keys(
-                'author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'
-              );
+              expect(body.articles[0].title).to.equal('Living in the shadow of a great man');
+              expect(body.articles[11].title).to.equal('Moustache');
             });
         });
+        it('GET')
+      });
     });
   });
 });
