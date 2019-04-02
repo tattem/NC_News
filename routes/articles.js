@@ -3,4 +3,5 @@ const {getArticles} = require('../controllers/articles')
 
 articlesRouter.route('/').get(getArticles)
 
+
 module.exports = articlesRouter;
