@@ -25,7 +25,6 @@ exports.seed = (knex, Promise) => {
     })
     .then(([insertedArticles, insertedUsers]) => {
       const convertedComments = convertCommentData(commentData, insertedArticles)
-      console.log(convertedComments, '<<< converted COmments')
       return knex('comments')
         .insert(convertedComments)
         .returning('*');

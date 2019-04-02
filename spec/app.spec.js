@@ -40,8 +40,8 @@ describe('/', () => {
             .get('/api/articles')
             .expect(200)
             .then(({ body }) => {
-              expect(body.articles[0].body).to.equal(
-                'I find this existence challenging'
+              expect(body.articles[0]).to.contain.keys(
+                'author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'
               );
             });
         });
