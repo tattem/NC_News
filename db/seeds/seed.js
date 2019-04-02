@@ -1,5 +1,6 @@
 const { articleData, commentData, topicData, userData } = require('../data');
 const { convertArticleData } = require('../../utils/convertArticleData');
+const { convertCommentData } = require('../../utils/convertCommentData');
 
 exports.seed = (knex, Promise) => {
   return knex.migrate
@@ -15,13 +16,18 @@ exports.seed = (knex, Promise) => {
         .insert(userData)
         .returning('*');
     })
-    .then(() => {
-      // run a method that takes the article data and converts it.
+    .then(insertedUsers => {
       const convertedArticles = convertArticleData(articleData);
-      console.log(convertedArticles, '<<< converted articles')
-      return knex('articles')
+      const insertedArticles = knex('articles')
         .insert(convertedArticles)
         .returning('*');
-      // insert the returned data in to the articles table
+      return Promise.all([insertedArticles, insertedUsers]);
+    })
+    .then(([insertedArticles, insertedUsers]) => {
+      const convertedComments = convertCommentData(commentData, insertedArticles)
+      console.log(convertedComments, '<<< converted COmments')
+      return knex('comments')
+        .insert(convertedComments)
+        .returning('*');
     });
 };
