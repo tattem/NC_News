@@ -57,11 +57,28 @@ describe('/', () => {
             .get('/api/articles')
             .expect(200)
             .then(({ body }) => {
-              expect(body.articles[0].title).to.equal('Living in the shadow of a great man');
+              expect(body.articles[0].title).to.equal(
+                'Living in the shadow of a great man'
+              );
               expect(body.articles[11].title).to.equal('Moustache');
             });
         });
-        it('GET')
+        it('GET status:200 and accepts a where query for author', () => {
+          return request
+            .get('/api/articles?author=butter_bridge')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles.length).to.equal(3)
+            });
+        });
+        it('GET status:200 and accepts a where query for author and topic', () => {
+          return request
+            .get('/api/articles?author=rogersop&topic=mitch')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles.length).to.equal(2)
+            });
+        });
       });
     });
   });
