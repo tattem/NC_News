@@ -51,7 +51,7 @@ describe('/', () => {
             );
           });
       });
-      describe('DEFAULT BEHAVIORS', () => {
+      describe('DEFAULT BEHAVIOURS', () => {
         it('GET status:200 and returns the date in desc order', () => {
           return request
             .get('/api/articles')
@@ -139,9 +139,56 @@ describe('/', () => {
               .get('/api/articles/1/comments')
               .expect(200)
               .then(({ body }) => {
-                expect(body.comments.length).to.equal(13)
-                expect(body.comments[0]).to.contain.keys('comment_id', 'votes', 'created_at', 'author', 'body')
+                expect(body.comments.length).to.equal(13);
+                expect(body.comments[0]).to.contain.keys(
+                  'comment_id',
+                  'votes',
+                  'created_at',
+                  'author',
+                  'body'
+                );
               });
+          });
+          describe('DEFAULT BEHAVIOURS', () => {
+            it('GET status:200 and returns the created_at in desc order', () => {
+              return request
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments[0].body).to.equal(
+                    'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.'
+                  );
+                  expect(body.comments[12].body).to.equal(
+                    'This morning, I showered for nine minutes.'
+                  );
+                });
+            });
+            it('GET status:200 and accepts a sort_by query', () => {
+              return request
+                .get('/api/articles/1/comments?sort_by=body')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments[0].body).to.equal(
+                    'git push origin master'
+                  );
+                  expect(body.comments[12].body).to.equal(
+                    ' I carry a log — yes. Is it funny to you? It is not to me.'
+                  );
+                });
+            });
+            it('GET status:200 and accepts a order query', () => {
+              return request
+                .get('/api/articles/1/comments?order=asc')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments[0].body).to.equal(
+                    'This morning, I showered for nine minutes.'
+                  );
+                  expect(body.comments[12].body).to.equal(
+                    'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.'
+                  );
+                });
+            });
           });
         });
       });
