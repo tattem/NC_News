@@ -86,15 +86,35 @@ describe('/', () => {
             .get('/api/articles/2')
             .expect(200)
             .then(({ body }) => {
-              expect(body.article).to.contain.keys('author',
-              'title',
-              'article_id',
-              'body',
-              'topic',
-              'created_at',
-              'votes',
-              'comment_count');
-              expect(body.article.title).to.equal('Sony Vaio; or, The Laptop')
+              expect(body.article).to.contain.keys(
+                'author',
+                'title',
+                'article_id',
+                'body',
+                'topic',
+                'created_at',
+                'votes',
+                'comment_count'
+              );
+              expect(body.article.title).to.equal('Sony Vaio; or, The Laptop');
+            });
+        });
+        it('PATCH status:201 and returns the updated patched article positive', () => {
+          return request
+            .patch('/api/articles/2')
+            .send({ inc_votes: 5 })
+            .expect(201)
+            .then(({ body }) => {
+              expect(body.article.votes).to.equal(5);
+            });
+        });
+        it('PATCH status:201 and returns the updated patched article negative', () => {
+          return request
+            .patch('/api/articles/2')
+            .send({ inc_votes: -5 })
+            .expect(201)
+            .then(({ body }) => {
+              expect(body.article.votes).to.equal(-5);
             });
         });
       });

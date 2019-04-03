@@ -2,15 +2,18 @@ const connection = require('../db/connection');
 
 exports.sendArticles = (
   { sort_by = 'articles.created_at', order = 'desc', ...remainingQueries },
-  param) => {
+  param
+) => {
   return connection
-    .select('articles.author',
-    'title',
-    'articles.article_id',
-    'articles.body',
-    'topic',
-    'articles.created_at',
-    'articles.votes')
+    .select(
+      'articles.author',
+      'title',
+      'articles.article_id',
+      'articles.body',
+      'topic',
+      'articles.created_at',
+      'articles.votes'
+    )
     .from('articles')
     .leftJoin('comments', 'comments.article_id', '=', 'articles.article_id')
     .groupBy('articles.article_id')
@@ -23,5 +26,14 @@ exports.sendArticles = (
       if (param) builder.where('articles.article_id', param);
     })
     .orderBy(sort_by, order)
+    .returning('*');
+};
+
+exports.fetchUpdatedArticle = (id, increment) => {
+  return connection
+    .select('*')
+    .from('articles')
+    .where(id)
+    .increment('votes', increment)
     .returning('*');
 };
