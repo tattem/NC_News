@@ -10,6 +10,7 @@ exports.sendArticles = ({sort_by = 'articles.created_at', order = 'desc', ...rem
     .count('comments.article_id as comment_count')
     .where((builder) => {
       if (remainingQueries.author) builder.where('articles.author',remainingQueries.author)
+      if (remainingQueries.topic) builder.where('articles.topic',remainingQueries.topic)
     })
     .orderBy(sort_by, order)
     .returning('*');
