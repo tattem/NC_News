@@ -94,6 +94,7 @@ describe('/', () => {
               'created_at',
               'votes',
               'comment_count');
+              expect(body.article.title).to.equal('Sony Vaio; or, The Laptop')
             });
         });
       });
