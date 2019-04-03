@@ -1,7 +1,13 @@
 const { sendArticles } = require('../models/articles');
 
 exports.getArticles = (req, res, next) => {
-    sendArticles(req.query).then(articles => {
-        res.status(200).json({articles})
-    })
-}
+  sendArticles(req.query).then(articles => {
+    articles.forEach(article => delete article.body);
+    res.status(200).json({ articles });
+  });
+};
+exports.getArticle = (req, res, next) => {
+  sendArticles(req.query, req.params.article_id).then(([article]) => {
+    res.status(200).json({ article });
+  });
+};

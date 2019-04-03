@@ -68,7 +68,7 @@ describe('/', () => {
             .get('/api/articles?author=butter_bridge')
             .expect(200)
             .then(({ body }) => {
-              expect(body.articles.length).to.equal(3)
+              expect(body.articles.length).to.equal(3);
             });
         });
         it('GET status:200 and accepts a where query for author and topic', () => {
@@ -76,7 +76,24 @@ describe('/', () => {
             .get('/api/articles?author=rogersop&topic=mitch')
             .expect(200)
             .then(({ body }) => {
-              expect(body.articles.length).to.equal(2)
+              expect(body.articles.length).to.equal(2);
+            });
+        });
+      });
+      describe('/:article_id', () => {
+        it('GET status:200 and returns an article matching the parametric endpoint id', () => {
+          return request
+            .get('/api/articles/2')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article).to.contain.keys('author',
+              'title',
+              'article_id',
+              'body',
+              'topic',
+              'created_at',
+              'votes',
+              'comment_count');
             });
         });
       });

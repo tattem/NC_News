@@ -1,16 +1,26 @@
 const connection = require('../db/connection');
 
-exports.sendArticles = ({sort_by = 'articles.created_at', order = 'desc', ...remainingQueries}) => {
-  console.log(remainingQueries, '<<<< rem q')
+exports.sendArticles = (
+  { sort_by = 'articles.created_at', order = 'desc', ...remainingQueries },
+  param) => {
   return connection
-    .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
+    .select('articles.author',
+    'title',
+    'articles.article_id',
+    'articles.body',
+    'topic',
+    'articles.created_at',
+    'articles.votes')
     .from('articles')
     .leftJoin('comments', 'comments.article_id', '=', 'articles.article_id')
     .groupBy('articles.article_id')
     .count('comments.article_id as comment_count')
-    .where((builder) => {
-      if (remainingQueries.author) builder.where('articles.author',remainingQueries.author)
-      if (remainingQueries.topic) builder.where('articles.topic',remainingQueries.topic)
+    .where(builder => {
+      if (remainingQueries.author)
+        builder.where('articles.author', remainingQueries.author);
+      if (remainingQueries.topic)
+        builder.where('articles.topic', remainingQueries.topic);
+      if (param) builder.where('articles.article_id', param);
     })
     .orderBy(sort_by, order)
     .returning('*');
