@@ -37,3 +37,11 @@ exports.fetchUpdatedArticle = (id, increment) => {
     .increment('votes', increment)
     .returning('*');
 };
+
+exports.deleteArticle = id => {
+  return connection
+    .select('*')
+    .from('articles')
+    .where(id)
+    .del();
+};

@@ -117,6 +117,19 @@ describe('/', () => {
               expect(body.article.votes).to.equal(-5);
             });
         });
+        it('DELETE status:204 and deletes the endpoint article', () => {
+          const deletedChecked = request
+            .get('/api/articles/2')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.title).to.equal('Sony Vaio; or, The Laptop');
+              const deleted = request.delete('/api/articles/2').expect(204).then(() => {
+                return request.get('/api/articles/2').expect(404)
+              })
+              return deleted
+            });
+          return deletedChecked;
+        });
       });
     });
   });
