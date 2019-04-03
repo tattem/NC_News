@@ -123,12 +123,26 @@ describe('/', () => {
             .expect(200)
             .then(({ body }) => {
               expect(body.article.title).to.equal('Sony Vaio; or, The Laptop');
-              const deleted = request.delete('/api/articles/2').expect(204).then(() => {
-                return request.get('/api/articles/2').expect(404)
-              })
-              return deleted
+              const deleted = request
+                .delete('/api/articles/2')
+                .expect(204)
+                .then(() => {
+                  return request.get('/api/articles/2').expect(404);
+                });
+              return deleted;
             });
           return deletedChecked;
+        });
+        describe('/comments', () => {
+          it('GET status:200 and returns an array of comments for an article id', () => {
+            return request
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comments.length).to.equal(13)
+                expect(body.comments[0]).to.contain.keys('comment_id', 'votes', 'created_at', 'author', 'body')
+              });
+          });
         });
       });
     });
