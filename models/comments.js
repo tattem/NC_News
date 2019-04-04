@@ -15,6 +15,14 @@ exports.postComments = (id, params) => {
     .returning('*');
 };
 
+exports.deleteComment = id => {
+  return connection
+    .select('*')
+    .from('comments')
+    .where(id)
+    .del();
+};
+
 exports.updateVotes = (id, increment) => {
   return connection
     .select('*')

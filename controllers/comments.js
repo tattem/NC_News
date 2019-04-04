@@ -1,4 +1,4 @@
-const { sendComments, postComments, updateVotes } = require('../models/comments');
+const { sendComments, postComments, updateVotes, deleteComment } = require('../models/comments');
 
 exports.getArticleComments = (req, res, next) => {
   sendComments(req.query, req.params).then(comments => {
@@ -18,3 +18,9 @@ exports.incrementCommentVotes = (req, res, next) => {
     res.status(201).json({ comment });
   });
 };
+
+exports.sendDeletedComment = (req, res, next) => {
+  deleteComment(req.params).then(() => {
+    res.status(204).send()
+  })
+}

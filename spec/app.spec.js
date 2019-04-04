@@ -222,7 +222,7 @@ describe('/', () => {
         it('PATCH status:201 and increments the vote on the comment id', () => {
           return request
             .patch('/api/comments/4')
-            .send({ inc_votes : 5 })
+            .send({ inc_votes: 5 })
             .expect(201)
             .then(({ body }) => {
               expect(body.comment).to.contain.keys(
@@ -233,8 +233,29 @@ describe('/', () => {
                 'author',
                 'body'
               );
-              expect(body.comment.votes).to.equal(5)
+              expect(body.comment.votes).to.equal(5);
             });
+        });
+        it('DELETE status:204 and deletes the endpoint comment', () => {
+          const deletedChecked = request
+            .get('/api/articles/1')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.comment_count).to.equal('13');
+              const deleted = request
+                .delete('/api/comments/2')
+                .expect(204)
+                .then(() => {
+                  return request
+                    .get('/api/articles/1')
+                    .expect(200)
+                    .then(({ body }) => {
+                      expect(body.article.comment_count).to.equal('12');
+                    });
+                });
+              return deleted;
+            });
+          return deletedChecked;
         });
       });
     });
