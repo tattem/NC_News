@@ -149,6 +149,30 @@ describe('/', () => {
                 );
               });
           });
+          it('POST status:200 and adds a new comment to an article and returns an object of the posted comment', () => {
+            return request
+              .post('/api/articles/1/comments')
+              .send({
+                username: 'rogersop',
+                body:
+                  'https://www.google.com/search?q=git+meme&rlz=1C5CHFA_enGB838GB838&tbm=isch&source=iu&ictx=1&fir=cjaPnsdSLrgVQM%253A%252CkHwsr7YoUPRbDM%252C_&vet=1&usg=AI4_-kT7P9YJ3phjdLYGWJ_FJIegsjc7dw&sa=X&ved=2ahUKEwj4_N-z-rXhAhWWURUIHfteAiYQ9QEwBHoECAYQDA#imgrc=TVDimyimo2AlDM:&vet=1'
+              })
+              .expect(201)
+              .then(({ body }) => {
+                expect(body.comment.author).to.equal('rogersop');
+                expect(body.comment.body).to.equal(
+                  'https://www.google.com/search?q=git+meme&rlz=1C5CHFA_enGB838GB838&tbm=isch&source=iu&ictx=1&fir=cjaPnsdSLrgVQM%253A%252CkHwsr7YoUPRbDM%252C_&vet=1&usg=AI4_-kT7P9YJ3phjdLYGWJ_FJIegsjc7dw&sa=X&ved=2ahUKEwj4_N-z-rXhAhWWURUIHfteAiYQ9QEwBHoECAYQDA#imgrc=TVDimyimo2AlDM:&vet=1'
+                );
+                expect(body.comment).to.contain.keys(
+                  'comment_id',
+                  'votes',
+                  'created_at',
+                  'article_id',
+                  'author',
+                  'body'
+                );
+              });
+          });
           describe('DEFAULT BEHAVIOURS', () => {
             it('GET status:200 and returns the created_at in desc order', () => {
               return request
@@ -190,6 +214,27 @@ describe('/', () => {
                 });
             });
           });
+        });
+      });
+    });
+    describe('/comments', () => {
+      describe('/:comment_id', () => {
+        it('PATCH status:201 and increments the vote on the comment id', () => {
+          return request
+            .patch('/api/comments/4')
+            .send({ inc_votes : 5 })
+            .expect(201)
+            .then(({ body }) => {
+              expect(body.comment).to.contain.keys(
+                'comment_id',
+                'votes',
+                'created_at',
+                'article_id',
+                'author',
+                'body'
+              );
+              expect(body.comment.votes).to.equal(5)
+            });
         });
       });
     });
