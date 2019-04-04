@@ -259,5 +259,15 @@ describe('/', () => {
         });
       });
     });
+    describe('/users', () => {
+      describe('/:username', () => {
+        it('GET status:200 and returns the details for the user endpoint', () => {
+          return request.get('/api/users/rogersop').expect(200).then(({body})=> {
+            expect(body.user).to.contain.keys('username', 'avatar_url', 'name')
+            expect(body.user.name).to.equal('paul')
+          })
+        });
+      });
+    });
   });
 });
