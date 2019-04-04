@@ -19,12 +19,20 @@ exports.getArticle = (req, res, next) => {
     .catch(next);
 };
 exports.sendPatchUpdate = (req, res, next) => {
-  fetchUpdatedArticle(req.params, req.body.inc_votes).then(([article]) => {
-    res.status(201).json({ article });
-  });
+  fetchUpdatedArticle(req.params, req.body.inc_votes)
+    .then(([article]) => {
+      if (!article) return Promise.reject({ status: 404 });
+      res.status(201).json({ article });
+    })
+    .catch(next);
 };
 exports.sendDeletedArticle = (req, res, next) => {
-  deleteArticle(req.params).then(() => {
-    res.status(204).send();
-  });
+  sendArticles(req.query, req.params.article_id)
+    .then(([article]) => {
+      if (!article) return Promise.reject({ status: 404 });
+      deleteArticle(req.params).then(() => {
+        res.status(204).send();
+      });
+    })
+    .catch(next);
 };

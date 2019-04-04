@@ -80,6 +80,12 @@ describe('/', () => {
             });
         });
       });
+
+
+
+
+// error needed!!!!!!!!!!!!
+
       describe('/:article_id', () => {
         it('GET status:200 and returns an article matching the parametric endpoint id', () => {
           return request
@@ -132,6 +138,45 @@ describe('/', () => {
               return deleted;
             });
           return deletedChecked;
+        });
+        describe('ERROR HANDLING', () => {
+          it('GET status:400 for an impossible article id para endpoint', () => {
+            return request.get('/api/articles/wrong').expect(400);
+          });
+          it('GET status:404 for a non existant article id para endpoint', () => {
+            return request.get('/api/articles/500').expect(404);
+          });
+          it('GET status:400 for an impossible article id para endpoint', () => {
+            return request
+              .patch('/api/articles/BigTrev')
+              .send({ inc_votes: -5 })
+              .expect(400);
+          });
+          it('GET status:404 for a non existant article id para endpoint', () => {
+            return request
+              .patch('/api/articles/500')
+              .send({ inc_votes: -5 })
+              .expect(404);
+          });
+          it("GET status:400 for bad request when given an increment that isn't a number", () => {
+            return request
+              .patch('/api/articles/2')
+              .send({ inc_votes: 'lilColin' })
+              .expect(400);
+          });
+          it('GET status:400 for an impossible article id para endpoint', () => {
+            return request.delete('/api/articles/BigTrev').expect(400);
+          });
+          it('GET status:404 for a non existant article id para endpoint', () => {
+            return request.delete('/api/articles/500').expect(404);
+          });
+          it('GET status:405 for an invalid method', () => {
+            const methods = ['put', 'post'];
+            const methodPromises = methods.map(method =>
+              request[method]('/api/articles/2').expect(405)
+            );
+            return Promise.all(methodPromises);
+          });
         });
         describe('/comments', () => {
           it('GET status:200 and returns an array of comments for an article id', () => {
@@ -214,6 +259,30 @@ describe('/', () => {
                 });
             });
           });
+          describe('ERROR HANDLING', () => {
+            it('GET status:400 for an impossible article id para endpoint on comments req', () => {
+              return request.get('/api/articles/wrong/comments').expect(400);
+            });
+            it('GET status:404 for a non existant article id para endpoint', () => {
+              return request.get('/api/articles/500/comments').expect(404);
+            });
+            it('GET status:422 for an unprocessable username (does not exist in users)', () => {
+              return request
+                .post('/api/articles/1/comments')
+                .send({
+                  username: 'TinyTimmy',
+                  body: 'sent'
+                })
+                .expect(422);
+            });
+            it('GET status:405 for an invalid method', () => {
+              const methods = ['put', 'patch', 'delete'];
+              const methodPromises = methods.map(method =>
+                request[method]('/api/articles/1/comments').expect(405)
+              );
+              return Promise.all(methodPromises);
+            });
+          });
         });
       });
     });
@@ -262,10 +331,17 @@ describe('/', () => {
     describe('/users', () => {
       describe('/:username', () => {
         it('GET status:200 and returns the details for the user endpoint', () => {
-          return request.get('/api/users/rogersop').expect(200).then(({body})=> {
-            expect(body.user).to.contain.keys('username', 'avatar_url', 'name')
-            expect(body.user.name).to.equal('paul')
-          })
+          return request
+            .get('/api/users/rogersop')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.user).to.contain.keys(
+                'username',
+                'avatar_url',
+                'name'
+              );
+              expect(body.user.name).to.equal('paul');
+            });
         });
       });
     });
