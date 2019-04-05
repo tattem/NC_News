@@ -18,8 +18,8 @@ describe('/', () => {
     });
   });
 
-  describe('/api', () => {
-    it('GET status:200', () => {
+  describe.only('/api', () => {
+    it.only('GET status:200', () => {
       return request
         .get('/api')
         .expect(200)
@@ -86,9 +86,7 @@ describe('/', () => {
             });
         });
       });
-
-      // error needed!!!!!!!!!!!!
-
+      
       describe('/:article_id', () => {
         it('GET status:200 and returns an article matching the parametric endpoint id', () => {
           return request
