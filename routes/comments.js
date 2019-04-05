@@ -1,5 +1,7 @@
 const commentsRouter = require('express').Router();
 
+const { methodNotAllowed } = require('../errors/index');
+
 const {
   incrementCommentVotes,
   sendDeletedComment
@@ -8,6 +10,6 @@ const {
 commentsRouter
   .route('/:comment_id')
   .patch(incrementCommentVotes)
-  .delete(sendDeletedComment);
+  .delete(sendDeletedComment).all(methodNotAllowed);
 
 module.exports = commentsRouter;

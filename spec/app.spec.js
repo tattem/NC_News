@@ -81,10 +81,7 @@ describe('/', () => {
         });
       });
 
-
-
-
-// error needed!!!!!!!!!!!!
+      // error needed!!!!!!!!!!!!
 
       describe('/:article_id', () => {
         it('GET status:200 and returns an article matching the parametric endpoint id', () => {
@@ -148,7 +145,7 @@ describe('/', () => {
           });
           it('GET status:400 for an impossible article id para endpoint', () => {
             return request
-              .patch('/api/articles/BigTrev')
+              .patch('/api/articles/BigBernie')
               .send({ inc_votes: -5 })
               .expect(400);
           });
@@ -161,7 +158,7 @@ describe('/', () => {
           it("GET status:400 for bad request when given an increment that isn't a number", () => {
             return request
               .patch('/api/articles/2')
-              .send({ inc_votes: 'lilColin' })
+              .send({ inc_votes: 'lilLatitia' })
               .expect(400);
           });
           it('GET status:400 for an impossible article id para endpoint', () => {
@@ -327,6 +324,39 @@ describe('/', () => {
           return deletedChecked;
         });
       });
+      describe('ERROR HANDLING', () => {
+        it('GET status:400 for an impossible comment id para endpoint', () => {
+          return request
+            .patch('/api/comments/MassiveMary')
+            .send({ inc_votes: -5 })
+            .expect(400);
+        });
+        it('GET status:404 for a non existant comment id para endpoint', () => {
+          return request
+            .patch('/api/comments/500')
+            .send({ inc_votes: 5 })
+            .expect(404);
+        });
+        it("GET status:400 for bad request when given an increment that isn't a number", () => {
+          return request
+            .patch('/api/comments/2')
+            .send({ inc_votes: 'AboveAverageAllen' })
+            .expect(400);
+        });
+        it('GET status:400 for an impossible comment id para endpoint', () => {
+          return request.delete('/api/comments/BigTrev').expect(400);
+        });
+        it('GET status:404 for a non existant comment id para endpoint', () => {
+          return request.delete('/api/comments/500').expect(404);
+        });
+        it('GET status:405 for an invalid method', () => {
+          const methods = ['put', 'post', 'get'];
+          const methodPromises = methods.map(method =>
+            request[method]('/api/comments/2').expect(405)
+          );
+          return Promise.all(methodPromises);
+        });
+      });
     });
     describe('/users', () => {
       describe('/:username', () => {
@@ -343,6 +373,14 @@ describe('/', () => {
               expect(body.user.name).to.equal('paul');
             });
         });
+      });
+      describe('ERROR HANDLING', () => {
+        it('GET status:400 for an impossible article id para endpoint', () => {
+          return request.get('/api/users/colinTheCaterpillar').expect(400);
+        });
+        // it('GET status:404 for a non existant article id para endpoint', () => {
+        //   return request.get('/api/articles/500').expect(404);
+        // });
       });
     });
   });

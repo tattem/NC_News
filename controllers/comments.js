@@ -26,15 +26,19 @@ exports.addArticleComment = (req, res, next) => {
 exports.incrementCommentVotes = (req, res, next) => {
   updateVotes(req.params, req.body.inc_votes)
     .then(([comment]) => {
+      if (!comment) return Promise.reject({ status: 404 });
       res.status(201).json({ comment });
     })
     .catch(next);
 };
 
 exports.sendDeletedComment = (req, res, next) => {
-  deleteComment(req.params)
-    .then(() => {
-      res.status(204).send();
+  sendComments(req.query, req.params)
+    .then(([comment]) => {
+      if (!comment) return Promise.reject({ status: 404 });
+      deleteComment(req.params).then(() => {
+        res.status(204).send();
+      });
     })
     .catch(next);
 };
