@@ -12,6 +12,12 @@ describe('/', () => {
   beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
 
+  describe('ERROR HANDLING - general', () => {
+    it('GET status:404 when given a path not accounted for', () => {
+      return request.get('/api/treasure').expect(404);
+    });
+  });
+
   describe('/api', () => {
     it('GET status:200', () => {
       return request
