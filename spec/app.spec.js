@@ -375,12 +375,9 @@ describe('/', () => {
         });
       });
       describe('ERROR HANDLING', () => {
-        it('GET status:400 for an impossible article id para endpoint', () => {
-          return request.get('/api/users/colinTheCaterpillar').expect(400);
+        it('GET status:404 for a non existant article id para endpoint', () => {
+          return request.get('/api/users/ColinTheCaterpillar').expect(404);
         });
-        // it('GET status:404 for a non existant article id para endpoint', () => {
-        //   return request.get('/api/articles/500').expect(404);
-        // });
       });
     });
   });
