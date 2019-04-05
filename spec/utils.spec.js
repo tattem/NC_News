@@ -3,7 +3,7 @@ const { convertArticleData } = require('../utils/convertArticleData');
 const { convertCommentData } = require('../utils/convertCommentData');
 
 describe('convertArticleData', () => {
-  it('returns a non mutated array', () => {
+  it('returns a new array', () => {
     const articles = [];
     expect(convertArticleData(articles)).to.not.equal(articles);
   });
@@ -21,7 +21,7 @@ describe('convertArticleData', () => {
 });
 
 describe('convertCommentData', () => {
-  it('returns an array of objects containing certain keys', () => {
+  it('returns an array of objects where comments has the corresponding article id based on title-belongs_to relationship, the author, created at and the body', () => {
     const comments = [
       {
         body:
