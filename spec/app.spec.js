@@ -18,8 +18,8 @@ describe('/', () => {
     });
   });
 
-  describe.only('/api', () => {
-    it.only('GET status:200', () => {
+  describe('/api', () => {
+    it('GET status:200', () => {
       return request
         .get('/api')
         .expect(200)
@@ -86,7 +86,20 @@ describe('/', () => {
             });
         });
       });
-      
+      describe('ERROR HANDLING', () => {
+        it('GET status:404 when passed an incorrect key for query', () => {
+          return request
+            .get('/api/articles?colin=butter_bridge')
+            .expect(404)
+        });
+        it('GET status:405 for an invalid method', () => {
+          const methods = ['put', 'post', 'patch', 'delete'];
+          const methodPromises = methods.map(method =>
+            request[method]('/api/articles').expect(405)
+          );
+          return Promise.all(methodPromises);
+        });
+      });
       describe('/:article_id', () => {
         it('GET status:200 and returns an article matching the parametric endpoint id', () => {
           return request
@@ -275,6 +288,14 @@ describe('/', () => {
                   body: 'sent'
                 })
                 .expect(422);
+            });
+            it('GET status:422 for an unprocessable username (does not exist in users)', () => {
+              return request
+                .post('/api/articles/1/comments')
+                .send({
+                  username: 'TinyTimmy',
+                })
+                .expect(400);
             });
             it('GET status:405 for an invalid method', () => {
               const methods = ['put', 'patch', 'delete'];

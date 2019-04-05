@@ -7,7 +7,7 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handle400 = (err, req, res, next) => {
-  const codes = ['22P02', '42703'];
+  const codes = ['22P02', '42703', '23502'];
   if (codes.includes(err.code)) {
     res.status(400).send({ msg: 'Bad Request' });
   } else {

@@ -7,6 +7,22 @@ const {
 exports.getArticles = (req, res, next) => {
   sendArticles(req.query)
     .then(articles => {
+      const allowedQueries = [
+        'article_id',
+        'title',
+        'body',
+        'votes',
+        'topic',
+        'author',
+        'created_at'
+      ];
+      let badQueryCount = 0;
+      Object.keys(req.query).forEach(query => {
+        if (!allowedQueries.includes(query)) {
+          badQueryCount++;
+        }
+      });
+      if (badQueryCount > 0) return Promise.reject({ status: 404 });
       articles.forEach(article => delete article.body);
       res.status(200).json({ articles });
     })
@@ -29,12 +45,10 @@ exports.sendPatchUpdate = (req, res, next) => {
     .catch(next);
 };
 exports.sendDeletedArticle = (req, res, next) => {
-  sendArticles(req.query, req.params.article_id)
-    .then(([article]) => {
-      if (!article) return Promise.reject({ status: 404 });
-      deleteArticle(req.params).then(() => {
-        res.status(204).send();
-      });
+  deleteArticle(req.params)
+    .then(deleted => {
+      if (deleted.length === 0) return Promise.reject({ status: 404 });
+      res.status(204).send();
     })
     .catch(next);
 };

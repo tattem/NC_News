@@ -11,7 +11,11 @@ const {
 } = require('../controllers/comments');
 const { methodNotAllowed } = require('../errors/index');
 
-articlesRouter.route('/').get(getArticles);
+articlesRouter
+  .route('/')
+  .get(getArticles)
+  .all(methodNotAllowed);
+
 articlesRouter
   .route('/:article_id')
   .get(getArticle)

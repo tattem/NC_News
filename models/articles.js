@@ -43,5 +43,6 @@ exports.deleteArticle = id => {
     .select('*')
     .from('articles')
     .where(id)
-    .del();
+    .del()
+    .returning('*');
 };

@@ -16,14 +16,13 @@ exports.seed = (knex, Promise) => {
         .insert(userData)
         .returning('*');
     })
-    .then(insertedUsers => {
+    .then(() => {
       const convertedArticles = convertArticleData(articleData);
-      const insertedArticles = knex('articles')
+      return insertedArticles = knex('articles')
         .insert(convertedArticles)
         .returning('*');
-      return Promise.all([insertedArticles, insertedUsers]);
     })
-    .then(([insertedArticles, insertedUsers]) => {
+    .then((insertedArticles) => {
       const convertedComments = convertCommentData(commentData, insertedArticles)
       return knex('comments')
         .insert(convertedComments)
