@@ -18,12 +18,15 @@ exports.seed = (knex, Promise) => {
     })
     .then(() => {
       const convertedArticles = convertArticleData(articleData);
-      return insertedArticles = knex('articles')
+      return (insertedArticles = knex('articles')
         .insert(convertedArticles)
-        .returning('*');
+        .returning('*'));
     })
-    .then((insertedArticles) => {
-      const convertedComments = convertCommentData(commentData, insertedArticles)
+    .then(insertedArticles => {
+      const convertedComments = convertCommentData(
+        commentData,
+        insertedArticles
+      );
       return knex('comments')
         .insert(convertedComments)
         .returning('*');
