@@ -25,7 +25,6 @@ exports.getArticles = (req, res, next) => {
         }
       });
       if (badQueryCount > 0) return Promise.reject({ status: 404 });
-      articles.forEach(article => delete article.body);
       res.status(200).json({ articles });
     })
     .catch(next);
