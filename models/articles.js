@@ -3,7 +3,9 @@ const connection = require('../db/connection');
 exports.sendArticles = (
   { sort_by = 'articles.created_at', order = 'desc', ...remainingQueries },
   param
-) => {
+) => { 
+  sort_by = sort_by === 'votes' ? `articles.${sort_by}` : sort_by
+  console.log(sort_by , 'THIS IS THE SORT BY FOR VOTES')
   return connection
     .select(
       'articles.author',

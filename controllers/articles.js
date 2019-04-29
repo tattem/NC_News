@@ -5,6 +5,7 @@ const {
 } = require('../models/articles');
 
 exports.getArticles = (req, res, next) => {
+  console.log(req.query)
   sendArticles(req.query)
     .then(articles => {
       const allowedQueries = [
@@ -14,7 +15,8 @@ exports.getArticles = (req, res, next) => {
         'votes',
         'topic',
         'author',
-        'created_at'
+        'created_at',
+        'sort_by'
       ];
       let badQueryCount = 0;
       Object.keys(req.query).forEach(query => {

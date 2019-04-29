@@ -77,6 +77,11 @@ describe('/', () => {
               expect(body.articles.length).to.equal(3);
             });
         });
+        it('GET SORT BY working', () => {
+          return request
+            .get('/api/articles?sort_by=votes')
+            .expect(200)
+        });
         it('GET status:200 and accepts a where query for author and topic', () => {
           return request
             .get('/api/articles?author=rogersop&topic=mitch')
